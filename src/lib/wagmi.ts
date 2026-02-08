@@ -1,7 +1,7 @@
 "use client"
 
 import { getDefaultConfig } from "@rainbow-me/rainbowkit"
-import { mainnet, polygon, arbitrum, optimism, base } from "wagmi/chains"
+import { mainnet, polygon, arbitrum, optimism, base, localhost } from "wagmi/chains"
 
 // Project ID from WalletConnect - in production, get from environment
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "demo-project-id"
@@ -9,7 +9,7 @@ const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "demo-proj
 export const config = getDefaultConfig({
     appName: "LIFI_Trade",
     projectId,
-    chains: [mainnet, polygon, arbitrum, optimism, base],
+    chains: [mainnet, polygon, arbitrum, optimism, base, localhost],
     ssr: true,
 })
 
@@ -20,4 +20,5 @@ export const supportedChains = [
     { id: 42161, name: "Arbitrum", icon: "🔵" },
     { id: 10, name: "Optimism", icon: "🔴" },
     { id: 8453, name: "Base", icon: "🔵" },
+    { id: 31337, name: "Localhost", icon: "🏠" },
 ]
