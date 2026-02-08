@@ -30,55 +30,36 @@ interface PortfolioState {
 }
 
 // Mock portfolio data for demo
-const mockAssets: PortfolioAsset[] = [
+// Test results data from verification script
+const testAssets: PortfolioAsset[] = [
     {
-        symbol: "BTC",
-        name: "Bitcoin",
-        amount: 1.5,
-        value: 65250,
-        price: 43500,
-        change24h: 2.34,
-        allocation: 52,
-        icon: "₿",
-    },
-    {
-        symbol: "ETH",
-        name: "Ethereum",
-        amount: 12.5,
-        value: 28750,
-        price: 2300,
-        change24h: 3.12,
-        allocation: 23,
+        symbol: "WETH",
+        name: "Wrapped Ether",
+        amount: 7.0, // 10 (Deposit) - 1 (Swap) - 2 (Withdraw)
+        value: 15400, // Approx $2200 * 7
+        price: 2200,
+        change24h: 1.2,
+        allocation: 95,
         icon: "Ξ",
-    },
-    {
-        symbol: "USDC",
-        name: "USD Coin",
-        amount: 25000,
-        value: 25000,
-        price: 1.0,
-        change24h: 0.01,
-        allocation: 20,
-        icon: "$",
     },
     {
         symbol: "LINK",
         name: "Chainlink",
-        amount: 350,
-        value: 5250,
+        amount: 1.0, // Swapped 1 WETH for 1 LINK (Mock Rate 1:1)
+        value: 15, // Real world approx, though mock was 1:1
         price: 15,
-        change24h: -1.24,
+        change24h: 0.5,
         allocation: 5,
         icon: "⛓",
     },
 ]
 
 export const usePortfolioStore = create<PortfolioState>()((set) => ({
-    totalValue: 125432.5,
-    change24h: 5.32,
-    unrealizedPnl: 3245.0,
-    stablecoinBalance: 25000,
-    assets: mockAssets,
+    totalValue: 15415.0,
+    change24h: 1.2,
+    unrealizedPnl: 415.0,
+    stablecoinBalance: 0,
+    assets: testAssets,
     isLoading: false,
     lastUpdated: new Date(),
 

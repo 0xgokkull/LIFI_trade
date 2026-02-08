@@ -33,103 +33,49 @@ interface TradeHistoryState {
 const generateId = () => Math.random().toString(36).substr(2, 9)
 
 // Mock trade data
-const mockTrades: TradeEntry[] = [
+// Test result trades
+const testTrades: TradeEntry[] = [
     {
-        id: "t1",
-        timestamp: new Date(Date.now() - 1000 * 60 * 5),
-        action: "buy",
-        asset: "BTC",
-        amount: 0.05,
-        price: 43500,
-        total: 2175,
+        id: "tx3",
+        timestamp: new Date(), // Withdraw (Recent)
+        action: "sell", // Withdraw mapped to sell (Burn WETH)
+        asset: "WETH",
+        amount: 2.0,
+        price: 2200,
+        total: 4400,
         status: "completed",
-        txHash: "0x1234...abcd",
+        txHash: "0xa0d37e28c86fa584098cdcb0b475c17bf10815bbf15162d1b0685a0c17b5de27",
     },
     {
-        id: "t2",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60),
-        action: "sell",
-        asset: "ETH",
-        amount: 0.5,
-        price: 2320,
-        total: 1160,
-        status: "completed",
-        txHash: "0x5678...efgh",
-    },
-    {
-        id: "t3",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3),
-        action: "buy",
+        id: "tx2",
+        timestamp: new Date(Date.now() - 1000 * 60), // Swap (1 min ago)
+        action: "buy", // Swap WETH->LINK mapped to Buy LINK
         asset: "LINK",
-        amount: 50,
-        price: 15.2,
-        total: 760,
+        amount: 1.0,
+        price: 2200, // Value of 1 WETH input
+        total: 2200,
         status: "completed",
-        txHash: "0x9abc...ijkl",
+        txHash: "0xb1503efdf29b9d48adeadc51c7749efa6ce89ca8edcf0beecb7e730ad97bca67",
     },
     {
-        id: "t4",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 6),
-        action: "bridge",
-        asset: "USDC",
-        amount: 5000,
-        price: 1,
-        total: 5000,
+        id: "tx1",
+        timestamp: new Date(Date.now() - 1000 * 60 * 5), // Deposit (5 mins ago)
+        action: "buy", // Deposit mapped to Buy WETH (Mint)
+        asset: "WETH",
+        amount: 10.0,
+        price: 2200,
+        total: 22000,
         status: "completed",
-        txHash: "0xdef0...mnop",
-    },
-    {
-        id: "t5",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12),
-        action: "sell",
-        asset: "BTC",
-        amount: 0.1,
-        price: 42800,
-        total: 4280,
-        status: "completed",
-        txHash: "0x1111...qrst",
-    },
-    {
-        id: "t6",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24),
-        action: "buy",
-        asset: "ETH",
-        amount: 2,
-        price: 2250,
-        total: 4500,
-        status: "completed",
-        txHash: "0x2222...uvwx",
-    },
-    {
-        id: "t7",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 48),
-        action: "sell",
-        asset: "LINK",
-        amount: 100,
-        price: 14.5,
-        total: 1450,
-        status: "completed",
-        txHash: "0x3333...yzab",
-    },
-    {
-        id: "t8",
-        timestamp: new Date(Date.now() - 1000 * 60 * 60 * 72),
-        action: "buy",
-        asset: "BTC",
-        amount: 0.25,
-        price: 41200,
-        total: 10300,
-        status: "completed",
-        txHash: "0x4444...cdef",
+        txHash: "0xc52a5832e2e44f16bb9c40099f7e96aa9a6fd5c3c85e410568b98aa730425284",
     },
 ]
 
 export const useTradeHistoryStore = create<TradeHistoryState>()((set, get) => ({
-    trades: mockTrades,
+    trades: testTrades,
     isLoading: false,
     page: 1,
     pageSize: 10,
-    totalTrades: mockTrades.length,
+    totalTrades: testTrades.length,
 
     setTrades: (trades) => set({ trades }),
 
