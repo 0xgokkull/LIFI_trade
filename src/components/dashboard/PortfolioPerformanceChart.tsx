@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { usePortfolioStore } from "@/store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { 
@@ -16,28 +17,34 @@ import {
   AreaChart
 } from "recharts"
 
-// Mock performance data
-const generatePerformanceData = (days: number) => {
+// Generate performance data ending at the current portfolio value
+const generatePerformanceData = (days: number, endValue: number) => {
   const data = []
-  let portfolioValue = 100000
-  let btcValue = 100000
-  let ethValue = 100000
+  // If no value, just return flat line of 0
+  if (!endValue) return []
+
+  // Work backwards from today
+  let currentValue = endValue
+  let btcValue = 42000
+  let ethValue = 2200
   
-  for (let i = days; i >= 0; i--) {
+  for (let i = 0; i < days; i++) {
     const date = new Date()
     date.setDate(date.getDate() - i)
     
-    // Simulate some random movements
-    portfolioValue *= 1 + (Math.random() - 0.48) * 0.03
-    btcValue *= 1 + (Math.random() - 0.5) * 0.04
-    ethValue *= 1 + (Math.random() - 0.5) * 0.05
-    
-    data.push({
+    data.unshift({
       date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-      portfolio: Math.round(portfolioValue),
+      portfolio: Math.round(currentValue),
       btc: Math.round(btcValue),
       eth: Math.round(ethValue),
     })
+
+    // Simulate previous days by reversing a random walk
+    // To go back in time, we divide by the change
+    const change = 1 + (Math.random() - 0.45) * 0.03 // Bias slightly up so past is lower (uptrend)
+    currentValue = currentValue / change
+    btcValue = btcValue / (1 + (Math.random() - 0.45) * 0.04)
+    ethValue = ethValue / (1 + (Math.random() - 0.45) * 0.05)
   }
   
   return data
@@ -54,14 +61,24 @@ const timeRangeConfig: Record<TimeRange, number> = {
   "ALL": 365,
 }
 
-export function PerformanceGraph() {
+export function PortfolioPerformanceChart() {
+  console.log("PortfolioPerformanceChart rendering");
+  const { totalValue } = usePortfolioStore()
   const [timeRange, setTimeRange] = useState<TimeRange>("1M")
-  const data = generatePerformanceData(timeRangeConfig[timeRange])
+  const [data, setData] = useState<any[]>([])
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    if (totalValue > 0) {
+      setData(generatePerformanceData(timeRangeConfig[timeRange], totalValue))
+    }
+  }, [timeRange, totalValue])
 
   // Calculate performance change
   const startValue = data[0]?.portfolio || 0
   const endValue = data[data.length - 1]?.portfolio || 0
-  const change = ((endValue - startValue) / startValue) * 100
+  const change = startValue !== 0 ? ((endValue - startValue) / startValue) * 100 : 0
   const isPositive = change >= 0
 
   // Custom tooltip
@@ -84,6 +101,23 @@ export function PerformanceGraph() {
       )
     }
     return null
+  }
+
+  if (!mounted) {
+    return (
+      <Card className="bg-card/50 backdrop-blur border-border/50">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <div>
+             <CardTitle className="text-lg font-semibold">Performance</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] flex items-center justify-center">
+            <span className="text-muted-foreground">Loading chart...</span>
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (

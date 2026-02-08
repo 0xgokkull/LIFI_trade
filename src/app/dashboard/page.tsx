@@ -7,10 +7,17 @@ import { Header, Footer } from "@/components/layout"
 import {
   PortfolioSummary,
   AllocationChart,
-  PerformanceGraph,
+  // PerformanceGraph, // Removing static import
   AIStrategyPanel,
   TradeLogTable,
 } from "@/components/dashboard"
+import dynamic from "next/dynamic"
+
+// Dynamically import PortfolioPerformanceChart with SSR disabled
+const PortfolioPerformanceChart = dynamic(
+  () => import("@/components/dashboard/PortfolioPerformanceChart").then((mod) => mod.PortfolioPerformanceChart),
+  { ssr: false }
+)
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { Button } from "@/components/ui/button"
 import { Wallet } from "lucide-react"
@@ -64,7 +71,7 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Performance Graph - Takes 2 columns */}
             <div className="lg:col-span-2">
-              <PerformanceGraph />
+              <PortfolioPerformanceChart />
             </div>
             
             {/* Allocation Chart */}

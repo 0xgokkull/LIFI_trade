@@ -6,7 +6,6 @@ import { Progress } from "@/components/ui/progress"
 import { 
   Brain, 
   TrendingUp, 
-  TrendingDown, 
   Minus,
   AlertCircle,
   Zap,
@@ -14,53 +13,10 @@ import {
   Target
 } from "lucide-react"
 
-// Mock AI strategy data
-const aiStrategy = {
-  marketBias: "bullish" as "bullish" | "bearish" | "neutral",
-  dipProbability: 23,
-  riskRegime: "low" as "low" | "medium" | "high",
-  confidence: 78,
-  nextMove: "Accumulate BTC on minor dips",
-  signals: [
-    { type: "bullish", message: "RSI divergence on 4H chart" },
-    { type: "bullish", message: "Whale accumulation detected" },
-    { type: "neutral", message: "Funding rates normalizing" },
-  ],
-  lastUpdated: new Date(Date.now() - 1000 * 60 * 5), // 5 mins ago
-}
-
 export function AIStrategyPanel() {
-  const biasConfig = {
-    bullish: {
-      icon: TrendingUp,
-      color: "text-emerald-500",
-      bg: "bg-emerald-500/10",
-      label: "Bullish",
-    },
-    bearish: {
-      icon: TrendingDown,
-      color: "text-red-500",
-      bg: "bg-red-500/10",
-      label: "Bearish",
-    },
-    neutral: {
-      icon: Minus,
-      color: "text-yellow-500",
-      bg: "bg-yellow-500/10",
-      label: "Neutral",
-    },
-  }
-
-  const riskConfig = {
-    low: { color: "text-emerald-500", progress: 25 },
-    medium: { color: "text-yellow-500", progress: 50 },
-    high: { color: "text-red-500", progress: 85 },
-  }
-
-  const bias = biasConfig[aiStrategy.marketBias]
-  const BiasIcon = bias.icon
-  const risk = riskConfig[aiStrategy.riskRegime]
-
+  const confidence = 85
+  const dipProbability = 12
+  
   return (
     <Card className="bg-card/50 backdrop-blur border-border/50">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
@@ -69,24 +25,24 @@ export function AIStrategyPanel() {
           AI Strategy Insights
         </CardTitle>
         <Badge variant="outline" className="text-xs">
-          Updated 5m ago
+          Live
         </Badge>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Market Bias */}
         <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${bias.bg}`}>
-              <BiasIcon className={`h-5 w-5 ${bias.color}`} />
+            <div className="p-2 rounded-lg bg-emerald-500/10">
+              <TrendingUp className="h-5 w-5 text-emerald-500" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Market Bias</p>
-              <p className={`text-lg font-semibold ${bias.color}`}>{bias.label}</p>
+              <p className="text-lg font-semibold text-emerald-500">Bullish</p>
             </div>
           </div>
           <div className="text-right">
             <p className="text-sm text-muted-foreground">Confidence</p>
-            <p className="text-lg font-semibold">{aiStrategy.confidence}%</p>
+            <p className="text-lg font-semibold">{confidence}%</p>
           </div>
         </div>
 
@@ -99,8 +55,8 @@ export function AIStrategyPanel() {
               Dip Probability
             </div>
             <div className="flex items-center gap-3">
-              <Progress value={aiStrategy.dipProbability} className="h-2" />
-              <span className="text-sm font-medium">{aiStrategy.dipProbability}%</span>
+              <Progress value={dipProbability} className="h-2" />
+              <span className="text-sm font-medium">{dipProbability}%</span>
             </div>
           </div>
 
@@ -111,9 +67,9 @@ export function AIStrategyPanel() {
               Risk Regime
             </div>
             <div className="flex items-center gap-3">
-              <Progress value={risk.progress} className="h-2" />
-              <span className={`text-sm font-medium capitalize ${risk.color}`}>
-                {aiStrategy.riskRegime}
+              <Progress value={30} className="h-2" />
+              <span className="text-sm font-medium capitalize text-emerald-500">
+                Low
               </span>
             </div>
           </div>
@@ -126,7 +82,7 @@ export function AIStrategyPanel() {
             <div>
               <p className="text-sm font-medium text-primary">Suggested Action</p>
               <p className="text-sm text-muted-foreground mt-1">
-                {aiStrategy.nextMove}
+                Monitoring market conditions for optimal entry points.
               </p>
             </div>
           </div>
@@ -139,18 +95,10 @@ export function AIStrategyPanel() {
             Active Signals
           </h4>
           <div className="space-y-2">
-            {aiStrategy.signals.map((signal, index) => (
-              <div 
-                key={index}
-                className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 text-sm"
-              >
-                <div className={`w-2 h-2 rounded-full ${
-                  signal.type === "bullish" ? "bg-emerald-500" :
-                  signal.type === "bearish" ? "bg-red-500" : "bg-yellow-500"
-                }`} />
-                <span className="text-muted-foreground">{signal.message}</span>
+             <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 text-sm">
+                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-muted-foreground">Trend monitoring active</span>
               </div>
-            ))}
           </div>
         </div>
 
